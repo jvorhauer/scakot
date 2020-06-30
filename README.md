@@ -2,6 +2,8 @@
 
 Scala Collections, Control, Tuples and maybe more translated to Kotlin.
 
+![Java CI with Gradle](https://github.com/jvorhauer/scakot/workflows/Java%20CI%20with%20Gradle/badge.svg)
+
 Inspired by (actually: stolen from) [vavr-kotlin](https://github.com/vavr-io/vavr-kotlin). Vavr is really great, but if your
 project is already depending on the Scala standard library, then Vavr duplicates a lot of stuff already on the classpath.
 
