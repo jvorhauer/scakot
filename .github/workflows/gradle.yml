@@ -38,7 +38,7 @@ jobs:
 
     - name: Upload the Report
       if: failure()
-      uses: actions/upload-artifact@develop
+      uses: actions/upload-artifact@master
       with:
         name: error-report
         path: build-reports.zip
