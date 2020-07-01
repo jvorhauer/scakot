@@ -23,9 +23,13 @@ class CollectionsTest {
 
     val lll = list("One", "Two", "Three")
     assertThat(lll.size()).isEqualTo(3)
+    assertThat(lll.isEmpty).isFalse()
+    assertThat(lll.apply(0)).isEqualTo("One")
 
-    val el = emptyList<Any>()
+    val el = list<Any>()
     assertThat(el.size()).isEqualTo(0)
+
+
   }
 
 }
