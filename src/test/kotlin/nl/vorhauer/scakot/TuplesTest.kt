@@ -1,68 +1,79 @@
 package nl.vorhauer.scakot
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.matchers.shouldBe
+import scala.Product
 
-class TuplesTest {
-  @Test
-  fun tuple1Test() {
-    val t1 = tuple("Hi")
-    assertThat(t1._1).isEqualTo("Hi")
-    assertThat(t1.productElement(0)).isEqualTo("Hi")
-    assertThat(t1.productArity()).isEqualTo(1)
-    assertThat(t1.productElementName(0)).isEqualTo("_1")
+class TuplesTest : WordSpec() {
+
+  init {
+    "Tuple1" should {
+      "support factory" {
+        val t = tuple("ScaKot is cool")
+        t._1 shouldBe "ScaKot is cool"
+        t.productElement(0) shouldBe "ScaKot is cool"
+        t.productArity() shouldBe 1
+        t.productElementName(0) shouldBe "_1"
+      }
+      "support unapply" {
+        val t = tuple("ScaKot is cool")
+        val (x) = t
+        x shouldBe "ScaKot is cool"
+      }
+    }
+
+    "Tuple2" should {
+      "support factory" {
+        val t = tuple("Cool", 42)
+        t._1 shouldBe "Cool"
+        t._2 shouldBe 42
+
+        check(t, "Cool", 42) shouldBe true
+      }
+
+      "support unapply" {
+        val t = tuple("Cool", 42)
+        val (x1, x2) = t
+        x1 shouldBe "Cool"
+        x2 shouldBe 42
+      }
+
+      "support conversion to Pair" {
+        val t = tuple("Cool", 42)
+        val p = t.pair()
+        p.first shouldBe "Cool"
+        p.second shouldBe 42
+      }
+    }
+
+    "Tuple3" should {
+      "support factory" {
+        val t = tuple("String", 42, false)
+        t._1() shouldBe "String"
+        t._2() shouldBe 42
+        t._3() shouldBe false
+
+        check(t, "String", 42, false) shouldBe true
+
+        val (v1, v2, v3) = t
+        v1 shouldBe "String"
+        v2 shouldBe 42
+        v3 shouldBe false
+      }
+    }
+
+    "Tuple4" should {
+      val t = tuple("String", 42, false, 5.4)
+      check(t, "String", 42, false, 5.4) shouldBe true
+    }
+
+    "Tuple5" should {
+      val t = tuple("String", 5, false, 4.5, "Five")
+      check(t, "String", 5, false, 4.5, "Five") shouldBe true
+    }
   }
 
-  @Test
-  fun tuple2Test() {
-    val t2 = tuple("String", 42)
-    assertThat(t2._1).isEqualTo("String")
-    assertThat(t2._2).isEqualTo(42)
-
-    val p = t2.pair()
-    assertThat(p.first).isEqualTo("String")
-    assertThat(p.second).isEqualTo(42)
-
-    val (v1, v2) = t2
-    assertThat(v1).isEqualTo("String")
-    assertThat(v2).isEqualTo(42)
-
-    val pt = Pair(43, "Integer").tuple()
-    assertThat(pt._1).isEqualTo(43)
-    assertThat(pt._2).isEqualTo("Integer")
-
-    val ts = pt.swap()
-    val (x1, x2) = ts
-    assertThat(x1).isEqualTo("Integer")
-    assertThat(x2).isEqualTo(43)
-  }
-
-  @Test
-  fun tuple3Test() {
-    val t3 = tuple("String", 42, false)
-    assertThat(t3._1()).isEqualTo("String")
-    assertThat(t3._2()).isEqualTo(42)
-    assertThat(t3._3()).isEqualTo(false)
-
-    val (v1, v2, v3) = t3
-    assertThat(v1).isEqualTo("String")
-    assertThat(v2).isEqualTo(42)
-    assertThat(v3).isEqualTo(false)
-  }
-
-
-  @Test
-  fun tuple4Test() {
-    val t4 = tuple("String", 42, false, 5.4)
-    assertThat(t4._1()).isEqualTo("String")
-    assertThat(t4._2()).isEqualTo(42)
-    assertThat(t4._3()).isEqualTo(false)
-    assertThat(t4._4()).isEqualTo(5.4)
-
-    val (v1, v2, v3, v4) = t4
-    assertThat(v1).isEqualTo("String")
-    assertThat(v2).isEqualTo(42)
-    assertThat(v3).isEqualTo(false)
-    assertThat(v4).isEqualTo(5.4)
+  private fun check(p: Product, vararg args: Any): Boolean {
+    return if (p.productArity() != args.size) false else !(args.mapIndexed { i, e -> p.productElement(i) == e }.contains(false))
   }
 }

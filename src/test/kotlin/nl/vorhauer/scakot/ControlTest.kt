@@ -1,58 +1,73 @@
 package nl.vorhauer.scakot
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import scala.Option
 import scala.Some
 import scala.util.Either
 import java.util.*
 
-class ControlTest {
-  @Test
-  fun optionTest() {
-    val oa: Option<String> = some("Hello")
-    val oe: Option<String> = none()
+class ControlTest : WordSpec() {
 
-    assertThat(oa.isDefined).isTrue()
-    assertThat(oe.isEmpty).isTrue()
+  init {
+    "Option" should {
+      "have 'some'" {
+        val oa: Option<String> = some("Hallo")
+        oa.isDefined shouldBe true
+        oa.map { "$it, World" } shouldBe Some("Hallo, World")
+      }
 
-    assertThat(oa.map { "$it, World" }).isEqualTo(Some("Hello, World"))
-    assertThat(oe.map { "$it, Emptiness"}).isEqualTo(none<String>())
+      "have 'none'" {
+        val oe: Option<String> = none()
+        oe.isDefined shouldBe false
+        oe.map { "$it, Emptiness" } shouldBe none<String>()
+      }
 
-    val na: Any? = null
-    assertThat(na.option()).isNotNull()
-    assertThat(na.option().isEmpty).isTrue()
+      "not be bothered by null" {
+        val na: Any? = null
+        na.option() shouldNotBe null
+        na.option().isEmpty shouldBe true
+      }
 
-    val opta = Optional.of("Maybe")
-    assertThat(opta.option().isEmpty).isFalse()
-  }
+      "handle optional correctly" {
+        val o = Optional.of("Maybe")
+        o.option() shouldBe Some("Maybe")
+      }
+    }
 
-  @Test
-  fun eitherTest() {
-    val er: Either<Any, String> = right("Hello")
-    assertThat(er).isNotNull()
-    assertThat(er.isLeft).isFalse()
-    assertThat(er.toSeq().size()).isEqualTo(1)
+    "Either" should {
+      "handle Left" {
+        val el: Either<String, Any> = left("Left")
+        el.isLeft shouldBe true
+        el.toSeq().size() shouldBe 0
+        el.toOption() shouldBe none<String>()
+      }
 
-    val el: Either<String, Any> = left("Bye")
-    assertThat(el).isNotNull()
-    assertThat(el.isLeft).isTrue()
-  }
+      "handle Right" {
+        val er: Either<Any, String> = right("Right")
+        er.isRight shouldBe true
+        er.toSeq().size() shouldBe 1
+        er.toOption() shouldBe some("Right")
+      }
+    }
 
-  @Test
-  fun tryTest() {
-    val t = Try { boomer() }
-    assertThat(t).isNotNull()
-    assertThat(t.isFailure).isTrue()
+    "Try" should {
+      "handle Failure" {
+        val t = Try { boomer() }
+        t.isFailure shouldBe true
 
-    assertThat(success("Success!").isSuccess).isTrue()
-    assertThat(failure<Nothing>(RuntimeException("fail")).isFailure).isTrue()
+        failure<Nothing>(RuntimeException("Failure")).isFailure shouldBe true
 
-    val e = t.toEither()
-    assertThat(e.isLeft).isTrue()
-    assertThat(e.toSeq().size()).isEqualTo(0)
+        val e = t.toEither()
+        e.isLeft shouldBe true
+      }
 
-    assertThat(success("Yes!").toEither().isLeft).isFalse()
+      "handle Success" {
+        success("Success!").isSuccess shouldBe true
+        success("Success!").get() shouldBe "Success!"
+      }
+    }
   }
 
   private fun boomer(): Nothing = throw RuntimeException("boom!")

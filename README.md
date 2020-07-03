@@ -1,10 +1,11 @@
 # scakot
 
-Scala Collections, Control, Tuples and maybe more translated to Kotlin.
+Make Scala List, Set, Map, Option, Either, Try and Tuples a bit more usable from Kotlin.
 
 ![Build](https://github.com/jvorhauer/scakot/workflows/Build/badge.svg)
 
-Inspired by (actually: stolen from) [vavr-kotlin](https://github.com/vavr-io/vavr-kotlin). Vavr is really great, but if your
+Inspired by (actually: stolen from) [vavr-kotlin](https://github.com/vavr-io/vavr-kotlin). 
+[Vavr](https://www.vavr.io/) is really great, but if your
 project is already depending on the Scala standard library, then Vavr duplicates a lot of stuff already on the classpath.
 
 My specific case here is the usage of Akka Persistence in a Kotlin project. I noticed that a lot of IntelliJ suggestions included
@@ -20,4 +21,9 @@ With the amount of effort going in to maintaining and improving the Scala standa
 be outstanding! 
 
 Another reason I would love to have Scala Lib everywhere: from a functional perspective the Scala standard lib is very
-complete. 
+complete and feels more familiair from the more accepted naming conventions, like in Haskell. 
+
+## Kotest
+
+An absolute eye-opener was me stumbling on [Kotest](https://github.com/kotest/kotest), 
+which brings a lot of goodies from [ScalaTest](https://www.scalatest.org/) to Kotlin!
