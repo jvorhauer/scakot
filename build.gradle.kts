@@ -19,6 +19,9 @@ repositories {
   jcenter()
 }
 
+group = "nl.vorhauer"
+version = "1.0.1-SNAPSHOT"
+
 sourceSets["main"].withConvention(KotlinSourceSet::class) { kotlin.srcDir("src/main/kotlin") }
 sourceSets["main"].resources.srcDir("src/main/resources")
 sourceSets["test"].withConvention(KotlinSourceSet::class) { kotlin.srcDir("src/test/kotlin") }
@@ -41,4 +44,40 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.withType<Test> {
   useJUnitPlatform()
+}
+
+publishing {
+  publications {
+    create<MavenPublication>("mavenJava") {
+      pom {
+        name.set("ScaKot")
+        description.set("Scala Kotlin bridge")
+        licenses {
+          license {
+            name.set("The Apache License, Version 2.0")
+            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+          }
+        }
+        developers {
+          developer {
+            id.set("juvor")
+            name.set("Jurjen Vorhauer")
+            email.set("jurjen@vorhauer.nl")
+          }
+        }
+        scm {
+          connection.set("scm:git:git://github.com/jvorhauer/scakot.git")
+          developerConnection.set("scm:git:ssh://github.com/jvorhauer/scakot.git")
+          url.set("https://github.com/jvorhauer/scakot")
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      val releaseUrl = ""
+      val snapshotsUrl = ""
+      url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsUrl else releaseUrl)
+    }
+  }
 }
